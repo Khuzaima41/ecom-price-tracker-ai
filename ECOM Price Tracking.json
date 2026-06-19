@@ -1,0 +1,1077 @@
+{
+  "name": "Zuria-ECOM Price Tracking",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        288
+      ],
+      "id": "b7c3304c-34b6-4c8f-b6b4-61e59dcf5a93",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://www.ebay.com/itm/266740495328?_trkparms=amclksrc%3DITM%26aid%3D777008%26algo%3DPERSONAL.TOPIC%26ao%3D1%26asc%3D20250416182756%26meid%3Dc5782c7501da4e8390e0648ebc588918%26pid%3D102690%26rk%3D1%26rkt%3D15%26itm%3D266740495328%26pmt%3D0%26noa%3D1%26pg%3D4375194%26algv%3DFeaturedDealsV2%26tu%3D01KD5KKZ2BNYZ27VPNN8Z4550W",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -224,
+        96
+      ],
+      "id": "8d23314f-d48d-448e-ac2e-37434a164959",
+      "name": "Fetch-product-1"
+    },
+    {
+      "parameters": {
+        "url": "https://www.ebay.com/itm/277520789131?_trkparms=amclksrc%3DITM%26aid%3D777008%26algo%3DPERSONAL.TOPIC%26ao%3D1%26asc%3D20250506202230%26meid%3De66f5b319eac48d8b016f32b2438b77a%26pid%3D102751%26rk%3D2%26rkt%3D2%26mehot%3Dpp%26itm%3D277520789131%26pmt%3D1%26noa%3D1%26pg%3D4375194%26algv%3DRecentlyViewedItemsV2SignedOut%26brand%3DDyson%26tu%3D01KD5M5E2YAWRK750X8M905YB9",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -224,
+        480
+      ],
+      "id": "77c98791-80ae-42bb-8c11-da670f50cb84",
+      "name": "Fetch product-2"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "title"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "00416e14-9703-4771-8ef6-8239b8f3ab11",
+      "name": "Title product-1"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "price_raw",
+              "cssSelector": ".x-price-primary .ux-textspans"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        192
+      ],
+      "id": "4d178e41-a36d-466b-a092-75f242bcb8b7",
+      "name": "price-1"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "title"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        384
+      ],
+      "id": "5d4964e7-2c16-4ef1-aa68-12c13589886d",
+      "name": "Title product-2"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "price_raw",
+              "cssSelector": ".x-price-primary .ux-textspans"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        576
+      ],
+      "id": "7577a1be-794a-4259-84b6-7a26a32a49ef",
+      "name": "price-2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        224,
+        96
+      ],
+      "id": "aee6d1a6-23e1-41d1-ae2e-d25bd5797f29",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        224,
+        480
+      ],
+      "id": "4df49c77-fb73-40f1-a205-b812c06d136d",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e5ca9bc8-3c84-492f-a479-2ecc1debf6b7",
+              "leftValue": "={{ $json.price_raw }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        96
+      ],
+      "id": "dda0469a-a2c1-4d4e-818d-351dea4d8ce6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d960604d-33cc-4fd0-8c3f-0616caa4b36b",
+              "leftValue": "={{ $json.price_raw }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        480
+      ],
+      "id": "4b25360b-26a0-4bc9-a196-095a5ffa2e59",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        672,
+        288
+      ],
+      "id": "480687ea-b164-4904-9c61-3143c9d6b73f",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "# _items is already a list (DO NOT call it)\nitems = _items\n\np1 = items[0][\"json\"] if len(items) > 0 else {}\np2 = items[1][\"json\"] if len(items) > 1 else {}\n\nreturn [{\n    \"json\": {\n        \"Product_1\": p1.get(\"title\"),\n        \"Price_1\": p1.get(\"price_raw\"),\n        \"Product_2\": p2.get(\"title\"),\n        \"Price_2\": p2.get(\"price_raw\"),\n    }\n}]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        288
+      ],
+      "id": "1f2c8b8c-41f0-4818-8370-1f2132bc3164",
+      "name": "Code in Python (Native) (Beta)"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA",
+          "mode": "list",
+          "cachedResultName": "ECOM Price Tracking ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product_1": "={{ $json.Product_1 }}",
+            "Price_1": "={{ $json.Price_1 }}",
+            "Product_2": "={{ $json.Product_2 }}",
+            "Price_2": "={{ $json.Price_2 }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product_1",
+              "displayName": "Product_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price_1",
+              "displayName": "Price_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product_2",
+              "displayName": "Product_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price_2",
+              "displayName": "Price_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        288
+      ],
+      "id": "d2c10761-5d4e-49bf-a54c-3dc3dcd8747b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9u4kjD9XhVakYV7F",
+          "name": "Google Sheets (Concaptions) i2i"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1408,
+        144
+      ],
+      "id": "90c12ebe-cebb-493d-a497-19ee942e7e45",
+      "name": "Wait",
+      "webhookId": "b887fb71-cb39-4618-aac0-3fd53bbad6e6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a price tracking and comparison agent.\n\nYour task:\n1. Use the available sheet-reading tool to fetch the LAST TWO rows from the Google Sheet.\n2. From those rows, read the values in these columns:\n   - Product_1\n   - Price_1\n   \n\n3. Compare the latest prices with the previous prices.\n4. Calculate the price difference for each product.\n5. Determine if the price increased, decreased, or stayed the same.\n\nOutput rules:\n- Be concise.\n- Do NOT explain your reasoning.\n- Do NOT include tool logs.\n- Use simple language.\n\nOutput format (plain text):\n\nProduct 1:\n- Latest price: <value>\n- Previous price: <value>\n- Change: <increase/decrease/no change>\n- Difference: <amount>\n\n\nFinal recommendation:\n- One short sentence stating which product is better value right now.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1696,
+        32
+      ],
+      "id": "df0c829b-0e79-4611-add9-1986572e7ba0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {
+          "webSearch": {}
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1680,
+        256
+      ],
+      "id": "cc98da87-b922-4d8b-a03a-d3a58c29dc33",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "3vrNMrijvhkM6iOr",
+          "name": "Pulse's OpenAi Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a price tracking and comparison agent.\n\nYour task:\n1. Use the available sheet-reading tool to fetch the LAST TWO rows from the Google Sheet.\n2. From those rows, read the values in these columns:\n   \n   - Product_2\n   - Price_2\n\n3. Compare the latest prices with the previous prices.\n4. Calculate the price difference for each product.\n5. Determine if the price increased, decreased, or stayed the same.\n\nOutput rules:\n- Be concise.\n- Do NOT explain your reasoning.\n- Do NOT include tool logs.\n- Use simple language.\n\nOutput format (plain text):\n\n\nProduct 2:\n- Latest price: <value>\n- Previous price: <value>\n- Change: <increase/decrease/no change>\n- Difference: <amount>\n\nFinal recommendation:\n- One short sentence stating which product is better value right now.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        432
+      ],
+      "id": "78f5e4d8-44d6-403e-b282-ad3b56db09dc",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1408,
+        640
+      ],
+      "id": "0d7836df-0303-41a7-93d2-0d3facc9931e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "3vrNMrijvhkM6iOr",
+          "name": "Pulse's OpenAi Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA",
+          "mode": "list",
+          "cachedResultName": "ECOM Price Tracking ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1888,
+        256
+      ],
+      "id": "4f180250-a517-4df3-af9c-ce4d315596a8",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9u4kjD9XhVakYV7F",
+          "name": "Google Sheets (Concaptions) i2i"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA",
+          "mode": "list",
+          "cachedResultName": "ECOM Price Tracking ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GBxJeUQK3nft9HFZ0eZ0av6ruuJatvt-_TmVPTAI7VA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1744,
+        624
+      ],
+      "id": "983bb5e0-32e5-40d7-8b20-34ea6e7559ed",
+      "name": "Get row(s) in sheet in Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9u4kjD9XhVakYV7F",
+          "name": "Google Sheets (Concaptions) i2i"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0ARM2UC70T",
+          "mode": "list",
+          "cachedResultName": "price-test"
+        },
+        "text": "=product-1-{{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2272,
+        144
+      ],
+      "id": "34302062-a416-4c90-9933-f7acb603aa81",
+      "name": "Send a message",
+      "webhookId": "af5735a3-785d-4c68-9313-faf1f1da0972",
+      "credentials": {
+        "slackApi": {
+          "id": "VZK9RCbZ8m2xTNEh",
+          "name": "My-Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0ARM2UC70T",
+          "mode": "list",
+          "cachedResultName": "price-test"
+        },
+        "text": "=product-2-{{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        2208,
+        400
+      ],
+      "id": "713a103d-90d0-4b5c-bf7d-cc4347604c69",
+      "name": "Send a message1",
+      "webhookId": "fe0c5499-647f-49ef-b9a2-3000b4f23366",
+      "credentials": {
+        "slackApi": {
+          "id": "VZK9RCbZ8m2xTNEh",
+          "name": "My-Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "20dd2c43-eca6-46b4-8728-5cdd5b708322",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "no change",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2048,
+        144
+      ],
+      "id": "8389a654-f451-472a-a19e-728a9508a86c",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ad3edb0e-ed8d-4d65-bccd-a32ce9817ab5",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "no change",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1904,
+        432
+      ],
+      "id": "20b44487-75e6-4c1a-96b9-d659201a0694",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 eBay Price Tracker & Slack Alerter\n\nAutomatically checks the prices of two eBay products on a schedule, logs every price to a Google Sheet, and uses AI to compare the latest price against the previous one. If either product's price has changed, a Slack alert is sent instantly — so you never miss a price drop or spike.\n\n⏱ **Runs:** Automatically on a schedule (set your preferred interval in the first step)\n✅ **Result:** Price history is saved to your Google Sheet and Slack gets a message whenever a product price changes",
+        "height": 200,
+        "width": 1136
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -384
+      ],
+      "id": "2567ca48-8086-4a4f-a1b3-8d6b613587d5",
+      "name": "Overview"
+    },
+    {
+      "parameters": {
+        "content": "## 🔧 What You Need\n\n1. **OpenAI API Key** — used by the AI to compare prices and write the Slack summary → https://platform.openai.com/api-keys\n2. **Google Sheet** — stores the price history; must have these columns in `Sheet1`: `Product_1`, `Price_1`, `Product_2`, `Price_2` → https://sheets.google.com\n3. **Google Account** — to connect the sheet (you'll sign in inside the workflow)\n4. **Slack Workspace + Bot** — the bot posts price change alerts to your chosen channel → https://api.slack.com/apps\n5. **Two eBay Product URLs** — the exact listing pages you want to track (update them in \"Fetch-product-1\" and \"Fetch product-2\")\n\n⚠️ Complete everything above before running the workflow.",
+        "height": 368,
+        "width": 540,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        -288
+      ],
+      "id": "4e23d9fc-c8c2-466a-9e8c-7e5b6c9aa860",
+      "name": "What You Need"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ How to Configure\n\n1. **Open \"Schedule Trigger\"** → set how often you want prices checked (e.g. every hour, every day)\n2. **Open \"Fetch-product-1\"** → replace the URL with the eBay listing page for your first product\n3. **Open \"Fetch product-2\"** → replace the URL with the eBay listing page for your second product\n4. **Open \"Append row in sheet\", \"Get row(s) in sheet in Google Sheets\", \"Get row(s) in sheet in Google Sheets1\"** → click the Google Sheets credential field in each → sign in with your Google account → select your spreadsheet and `Sheet1`\n5. **Open \"Send a message\" and \"Send a message1\"** → click the Slack credential field → connect your Slack bot → select the channel where alerts should be posted → https://api.slack.com/apps\n6. **Open \"AI Agent\" and \"AI Agent1\"** → click the OpenAI credential field → connect your OpenAI account\n\n💡 The workflow only sends a Slack alert when the price has actually changed — if the price stays the same, nothing is posted. You need at least 2 rows in your sheet before the AI comparison will work, so run it twice before expecting alerts.",
+        "height": 504,
+        "width": 620
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1296,
+        304
+      ],
+      "id": "23221407-6487-4178-bde9-f1bbc7ea6b7b",
+      "name": "How to Configure"
+    },
+    {
+      "parameters": {
+        "content": "## ▶️ How to Run\n\n**Starts:** Automatically on your chosen schedule once the workflow is active.\n\n**To test it now:**\n1. Click \"Test Workflow\" — it will fetch both eBay pages and log a row to your sheet\n2. Run it a second time so the AI has two rows to compare\n3. Check your Slack channel — if prices differ between the two runs, an alert will appear\n\n✅ **Working if:** A new row appears in your Google Sheet and (on the second run) a Slack message arrives in your channel\n❌ **If it fails:** Open \"Fetch-product-1\" — eBay may have blocked the request or the URL has changed",
+        "height": 344,
+        "width": 596,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2416,
+        -448
+      ],
+      "id": "dfacb5fc-a311-4cae-aee1-fa07d262e6a4",
+      "name": "How to Run"
+    },
+    {
+      "parameters": {
+        "content": "### STEP 1 — FETCH & EXTRACT PRICES\nVisits both eBay listing pages, pulls the product title and current price from each, and skips any listing where no price was found",
+        "height": 776,
+        "width": 1228,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -64
+      ],
+      "id": "259a3bb2-4ecb-44cc-85e6-ddaf058769d1",
+      "name": "Section: Fetch"
+    },
+    {
+      "parameters": {
+        "content": "### STEP 2 — LOG TO SHEET\nCombines both products into one row and saves the titles and prices to your Google Sheet as a timestamped record",
+        "height": 460,
+        "width": 560,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        736,
+        160
+      ],
+      "id": "ea090f3a-97a8-4d42-ae03-bcaaad670bbc",
+      "name": "Section: Log"
+    },
+    {
+      "parameters": {
+        "content": "### STEP 3 — AI PRICE COMPARISON & SLACK ALERT\nReads the last two rows from your sheet, compares prices for each product, and posts a Slack alert only when a price has changed",
+        "height": 800,
+        "width": 1380,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        -64
+      ],
+      "id": "437139e5-cbc0-4617-854b-af8a172c5d72",
+      "name": "Section: Alert"
+    }
+  ],
+  "pinData": {
+    "Code in Python (Native) (Beta)": [
+      {
+        "json": {
+          "Product_1": "Skullcandy Crusher Evo XT Wireless Over-Ear Headset (Certified Refurb) - BLACK |\neBay",
+          "Price_1": "US $84.99",
+          "Product_2": "Dyson HS05 Airwrap Styler (Long) | Nickel/Copper l Refurbished | eBay",
+          "Price_2": "US $374.99"
+        }
+      }
+    ],
+    "Merge2": [
+      {
+        "json": {
+          "title": "Skullcandy Crusher Evo XT Wireless Over-Ear Headset (Certified Refurb) - BLACK |\neBay",
+          "price_raw": "US $84.99"
+        },
+        "binary": {},
+        "pairedItem": {
+          "item": 0
+        }
+      },
+      {
+        "json": {
+          "title": "Dyson HS05 Airwrap Styler (Long) | Nickel/Copper l Refurbished | eBay",
+          "price_raw": "US $374.99"
+        },
+        "binary": {},
+        "pairedItem": {
+          "item": 0,
+          "input": 1
+        }
+      }
+    ],
+    "Wait": [
+      {
+        "json": {
+          "Product_1": "Skullcandy Crusher Evo XT Wireless Over-Ear Headset (Certified Refurb) - BLACK |\neBay",
+          "Price_1": "US $84.99",
+          "Product_2": "Dyson HS05 Airwrap Styler (Long) | Nickel/Copper l Refurbished | eBay",
+          "Price_2": "US $374.99"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch-product-1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch product-2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch-product-1": {
+      "main": [
+        [
+          {
+            "node": "Title product-1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "price-1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch product-2": {
+      "main": [
+        [
+          {
+            "node": "Title product-2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "price-2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Title product-1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "price-1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Title product-2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "price-2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code in Python (Native) (Beta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in Python (Native) (Beta)": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "6ae73a98-c6ef-4a34-b441-236357c10eb5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e10b2caeeedbb7486aebdd0a7fd0d0332b1fb8ce1536a7aa9fd243d9087c9301"
+  },
+  "id": "0JLqzdLwPzcd29bsbODdq",
+  "tags": []
+}
